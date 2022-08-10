@@ -1,18 +1,23 @@
 version: '3.4'
 services:
   weaviate:
-    image: semitechnologies/weaviate:1.9.0
-    restart: on-failure:0
+    image: semitechnologies/weaviate:1.14.0
     ports:
-     - "8081:8080"
+    - 8080:8080
+    restart: on-failure:0
     environment:
-      QUERY_DEFAULTS_LIMIT: 20
+      CONTEXTIONARY_URL: contextionary:9999
+      QUERY_DEFAULTS_LIMIT: 25
       AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: 'true'
-      PERSISTENCE_DATA_PATH: "./data"
-      DEFAULT_VECTORIZER_MODULE: text2vec-transformers
-      ENABLE_MODULES: text2vec-transformers
-      TRANSFORMERS_INFERENCE_API: http://t2v-transformers:8080
-  t2v-transformers:
-    image: semitechnologies/transformers-inference:sentence-transformers-msmarco-distilroberta-base-v2
+      PERSISTENCE_DATA_PATH: './data'
+      DEFAULT_VECTORIZER_MODULE: 'text2vec-contextionary'
+      ENABLE_MODULES: text2vec-contextionary
+      CLUSTER_HOSTNAME: 'node1'
+  contextionary:
     environment:
-      ENABLE_CUDA: 0
+      OCCURRENCE_WEIGHT_LINEAR_FACTOR: 0.75
+      EXTENSIONS_STORAGE_MODE: weaviate
+      EXTENSIONS_STORAGE_ORIGIN: http://weaviate:8080
+      NEIGHBOR_OCCURRENCE_IGNORE_PERCENTILE: 5
+      ENABLE_COMPOUND_SPLITTING: 'false'
+    image: semitechnologies/contextionary:en0.16.0-v1.0.2

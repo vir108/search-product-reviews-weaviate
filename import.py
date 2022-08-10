@@ -6,17 +6,10 @@ import uuid
 import weaviate 
 from weaviate.batch import Batch 
 import helper
-import weaviate
 
 # initiate the Weaviate client
-client = weaviate.Client("http://localhost:8081")
+client = weaviate.Client("http://localhost:8080")
 client.timeout_config = (3, 200)
-
-
-# initiate the Weaviate client
-client = weaviate.Client("http://localhost:8081")
-client.timeout_config = (3, 200)
-
 
 # load all metadata
 count = 0
@@ -29,7 +22,7 @@ with open('data/sample_meta_Home_and_Kitchen.json', 'r') as f:
           break
 
 # data cleaning, weaviate would run into issues if a property is missing in instance of data
- 
+
 productData = []
 
 for i in range(0, 3000):
